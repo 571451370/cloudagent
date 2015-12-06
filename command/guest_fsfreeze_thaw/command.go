@@ -8,9 +8,10 @@ package guest_fsfreeze_freeze
 
 import (
 	"os"
-	"syscall"
+	"unsafe"
 
 	"github.com/vtolstov/cloudagent/qga"
+	"github.com/vtolstov/go-ioctl"
 )
 
 func init() {
@@ -33,16 +34,15 @@ func fnGuestFsfreezeThaw(req *qga.Request) *qga.Response {
 		return res
 	}
 
-	action := F_THAW_FS
 	r := 0
-Loop:
+
 	for _, fs := range fslist {
 		f, err := os.Open(fs.Path)
 		if err != nil {
 			res.Error = &qga.Error{Code: -1, Desc: err.Error()}
 			return res
 		}
-		_, _, err = syscall.RawSyscall(syscall.SYS_IOCTL, uintptr(f.Fd()), uintptr(action), uintptr(unsafe.Pointer(&r)))
+		err = ioctl.Fithaw(uintptr(f.Fd()), uintptr(unsafe.Pointer(&r)))
 		if err != nil {
 			res.Error = &qga.Error{Code: -1, Desc: err.Error()}
 			return res

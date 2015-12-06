@@ -8,10 +8,10 @@ package guest_fsfreeze_freeze
 
 import (
 	"os"
+	"syscall"
 	"unsafe"
 
 	"github.com/vtolstov/cloudagent/qga"
-	"github.com/vtolstov/go-ioctl"
 )
 
 func init() {
@@ -35,8 +35,8 @@ func fnGuestFsfreezeFreeze(req *qga.Request) *qga.Response {
 	}
 
 	freezed := []string{}
+	action := F_FREEZE_FS
 	r := 0
-
 	for _, fs := range fslist {
 		f, err := os.Open(fs.Path)
 		if err != nil {
@@ -44,7 +44,7 @@ func fnGuestFsfreezeFreeze(req *qga.Request) *qga.Response {
 			res.Error = &qga.Error{Code: -1, Desc: err.Error()}
 			return res
 		}
-		err = ioctl.Fifreeze(uintptr(f.Fd()), uintptr(unsafe.Pointer(&r)))
+		_, _, err = syscall.RawSyscall(syscall.SYS_IOCTL, uintptr(f.Fd()), uintptr(action), uintptr(unsafe.Pointer(&r)))
 		if err != nil {
 			unfreeze()
 			res.Error = &qga.Error{Code: -1, Desc: err.Error()}
@@ -65,7 +65,7 @@ func unfreeze() {
 	if paths, ok := qga.StoreGet("guest-fsfreeze", "paths"); ok {
 		for _, path := range paths.([]string) {
 			if f, err := os.Open(path); err == nil {
-				ioctl.Fithaw(uintptr(f.Fd()), uintptr(unsafe.Pointer(&r)))
+				syscall.RawSyscall(syscall.SYS_IOCTL, uintptr(f.Fd()), uintptr(F_THAW_FS), uintptr(unsafe.Pointer(&r)))
 			}
 		}
 	}

@@ -1,5 +1,5 @@
 #!/bin/sh
 
-go test github.com/vtolstov/cloudagent
-go vet github.com/vtolstov/cloudagent
-golint github.com/vtolstov/cloudagent
+go test ./...
+go vet ./... | grep -vE "^vendor/"
+golint ./... | grep -vE "^vendor/"
