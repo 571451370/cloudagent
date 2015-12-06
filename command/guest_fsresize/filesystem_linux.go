@@ -200,10 +200,10 @@ func (d *Dev) Int() int {
 	return int(d.Major*256 + d.Minor)
 }
 
-func findFs() (*Dev, error) {
+func findFs(path string) (*Dev, error) {
 	var st syscall.Stat_t
 
-	err := syscall.Stat("/", &st)
+	err := syscall.Stat(path, &st)
 	if err != nil {
 		return nil, err
 	}
