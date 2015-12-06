@@ -1,48 +1,34 @@
 /*
-guest-fscheck - run check to test filesystem
+guest-fscresize - run resize file system
 
 Example:
-        { "execute": "guest-fscheck", "arguments": {
-            "path": string // optional, path to store tmp files
+        { "execute": "guest-fsresize", "arguments": {
+            "path": string // optional, mounted filesystem path
           }
         }
 */
-package guest_fstrim
+package guest_fsresize
 
 import (
 	"encoding/json"
-	"os/exec"
 
 	"github.com/vtolstov/cloudagent/qga"
 )
 
 func init() {
 	qga.RegisterCommand(&qga.Command{
-		Name:    "guest-fstrim",
-		Func:    fnGuestFstrim,
+		Name:    "guest-fsresize",
+		Func:    fnGuestFsresize,
 		Enabled: true,
 		Returns: true,
 	})
 }
 
-// TODO: USE NATIVE SYSCALL
-func fnGuestFstrim(req *qga.Request) *qga.Response {
+func fnGuestFsresize(req *qga.Request) *qga.Response {
 	res := &qga.Response{ID: req.ID}
-	//	r := ioctl.FsTrimRange{Start: 0, Length: -1, MinLength: 0}
 
 	reqData := struct {
-		Minimum int `json:"minimum,omitempty"`
-	}{}
-
-	type resPath struct {
-		Path    string `json:"path"`
-		Trimmed *int   `json:"trimmed,omitempty"`
-		Minimum *int   `json:"minimum,omitempty"`
-		Error   string `json:"error,omitempty"`
-	}
-
-	resData := struct {
-		Paths []*resPath `json:"paths"`
+		Path string `json:"path,omitempty"`
 	}{}
 
 	err := json.Unmarshal(req.RawArgs, &reqData)
@@ -51,30 +37,12 @@ func fnGuestFstrim(req *qga.Request) *qga.Response {
 		return res
 	}
 
-	fslist, err := qga.ListMountedFileSystems()
-	if err != nil {
-		res.Error = &qga.Error{Code: -1, Desc: err.Error()}
-		return res
-	}
-	/*
-		if f, err := os.OpenFile("/", os.O_RDONLY, os.FileMode(0400)); err == nil {
-			defer f.Close()
-			err = ioctl.Fitrim(uintptr(f.Fd()), uintptr(unsafe.Pointer(&r)))
-	*/
-	for _, fs := range fslist {
-		switch fs.Type {
-		case "ufs", "ffs":
-			err = exec.Command("fsck_"+fs.Type, "-B", "-E", fs.Path).Run()
-		default:
-			err = exec.Command("fstrim", fs.Path).Run()
-		}
-		rpath := &resPath{Path: fs.Path}
-		if err != nil {
-			rpath.Error = err.Error()
-		}
-		resData.Paths = append(resData.Paths, rpath)
+	if reqData.Path == "" {
+		reqData.Path = "/"
 	}
 
-	res.Return = resData
+	if err = resizefs(reqData.Path); err != nil {
+		res.Error = &qga.Error{Code: -1, Desc: err.Error()}
+	}
 	return res
 }
