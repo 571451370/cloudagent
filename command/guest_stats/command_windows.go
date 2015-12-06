@@ -6,7 +6,7 @@ Example:
 */
 package guest_stats
 
-import "github.com/vtolstov/qemu-ga/qga"
+import "github.com/vtolstov/cloudagent/qga"
 
 func init() {
 	qga.RegisterCommand(&qga.Command{
@@ -18,7 +18,7 @@ func init() {
 }
 
 func fnGuestStats(req *qga.Request) *qga.Response {
-	res := &qga.Response{Id: req.Id}
+	res := &qga.Response{ID: req.ID}
 	/*
 		resData := struct {
 			MemoryTotal uint64

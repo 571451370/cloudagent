@@ -8,7 +8,7 @@ import (
 )
 
 func fork() error {
-	cmd := exec.Command("qemu-ga")
+	cmd := exec.Command("cloudagent")
 	cmd.Dir = "/"
 	cmd.Stdin = nil
 	cmd.Stdout = nil

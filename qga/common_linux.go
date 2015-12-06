@@ -1,5 +1,4 @@
 // +build linux
-// +build !freebsd !netbsd !openbsd
 
 package qga
 
@@ -10,6 +9,7 @@ import (
 	"strings"
 )
 
+// ListMountedFileSystems returns currently mounted local file systems
 func ListMountedFileSystems() ([]FileSystem, error) {
 	var fs []FileSystem
 	var line string

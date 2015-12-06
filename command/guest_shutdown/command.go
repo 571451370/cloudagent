@@ -13,7 +13,7 @@ import (
 	"encoding/json"
 	"os/exec"
 
-	"github.com/vtolstov/qemu-ga/qga"
+	"github.com/vtolstov/cloudagent/qga"
 )
 
 func init() {
@@ -25,7 +25,7 @@ func init() {
 }
 
 func fnGuestShutdown(req *qga.Request) *qga.Response {
-	res := &qga.Response{Id: req.Id}
+	res := &qga.Response{ID: req.ID}
 
 	reqData := struct {
 		Mode string `json:"mode"`

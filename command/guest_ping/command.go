@@ -1,12 +1,12 @@
 /*
-guest-ping - ping guest
+Package guest_ping - ping guest
 
 Example:
         { "execute": "guest-ping", "arguments": {}}
 */
 package guest_ping
 
-import "github.com/vtolstov/qemu-ga/qga"
+import "github.com/vtolstov/cloudagent/qga"
 
 func init() {
 	qga.RegisterCommand(&qga.Command{

@@ -22,5 +22,6 @@ type ExecStatus struct {
 }
 
 const (
-	QGA_MAX_MESSAGE_LEN = 4 * 1024
+	// MaxMessageLength is the maximum message length
+	MaxMessageLength = 4 * 1024
 )

@@ -7,7 +7,7 @@ var (
 	BuildTime string
 )
 
-// GetVersion display current qemu-ga version
+// GetVersion display current cloudagent version
 func GetVersion() string {
 	return Version
 }

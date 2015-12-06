@@ -1,9 +1,9 @@
 /*
-guest-agent-update - update qemu-ga inside vm
+guest-agent-update - update cloudagent inside vm
 
 Example:
         { "execute": "guest-agent-update", "arguments": {
-            "path": string // required, http/https/file path to qemu-ga binary for update
+            "path": string // required, http/https/file path to cloudagent binary for update
             "timeout": int // optional, timeout for http/https transport
           }
         }
@@ -23,7 +23,7 @@ import (
 	"path/filepath"
 	"time"
 
-	"github.com/vtolstov/qemu-ga/qga"
+	"github.com/vtolstov/cloudagent/qga"
 )
 
 func init() {

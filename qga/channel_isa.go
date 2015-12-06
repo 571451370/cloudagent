@@ -7,6 +7,12 @@ import (
 	"golang.org/x/sys/unix"
 )
 
+const (
+	isaChannelMode  = os.FileMode(os.ModeCharDevice | 0600)
+	isaChannelFlags = unix.O_RDWR | ^unix.O_NONBLOCK | unix.O_CLOEXEC | unix.O_NDELAY
+)
+
+// IsaChannel struct
 type IsaChannel struct {
 	path string
 
@@ -18,18 +24,17 @@ type IsaChannel struct {
 	m sync.Mutex
 }
 
+// NewIsaChannel creates new isa channel
 func NewIsaChannel(path string) (*IsaChannel, error) {
 	return &IsaChannel{path: path}, nil
 }
 
+// Open initialize channel
 func (ch *IsaChannel) Open() error {
 	var f *os.File
 	var err error
 
-	openMode := os.FileMode(os.ModeCharDevice | 0600)
-	openFlags := unix.O_RDWR | ^unix.O_NONBLOCK | unix.O_CLOEXEC | unix.O_NDELAY
-
-	if f, err = os.OpenFile(ch.path, openFlags, openMode); err != nil {
+	if f, err = os.OpenFile(ch.path, isaChannelFlags, isaChannelMode); err != nil {
 		return err
 	}
 	ch.f = f
@@ -39,6 +44,7 @@ func (ch *IsaChannel) Open() error {
 	return err
 }
 
+// Reset resets channel
 func (ch *IsaChannel) Reset() error {
 	var err error
 	ch.m.Lock()
@@ -50,6 +56,7 @@ func (ch *IsaChannel) Reset() error {
 	return ch.Open()
 }
 
+// Close closing channel
 func (ch *IsaChannel) Close() error {
 	if err := ch.f.Close(); err != nil {
 		return err
@@ -59,10 +66,12 @@ func (ch *IsaChannel) Close() error {
 	return nil
 }
 
+// Read read from channel
 func (ch *IsaChannel) Read(b []byte) (int, error) {
 	return 0, nil
 }
 
+// Write write to channel
 func (ch *IsaChannel) Write(b []byte) (int, error) {
 	return 0, nil
 }

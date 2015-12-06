@@ -12,7 +12,7 @@ type Command struct {
 }
 
 var (
-	commands map[string]*Command = make(map[string]*Command)
+	commands = make(map[string]*Command)
 )
 
 // RegisterCommand registers command to process inside worker
@@ -46,9 +46,9 @@ func CmdRun(req *Request) *Response {
 		res := cmd.Func(req)
 		if cmd.Returns || res.Error != nil {
 			return res
-		} else {
-			return &Response{Return: struct{}{}}
 		}
+		return &Response{Return: struct{}{}}
+
 	}
 
 	return &Response{Error: &Error{Class: "CommandNotFound", Desc: fmt.Sprintf("command %s not found", req.Execute)}}

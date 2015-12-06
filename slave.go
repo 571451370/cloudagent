@@ -3,7 +3,7 @@ package main
 import (
 	"fmt"
 
-	"github.com/vtolstov/qemu-ga/qga"
+	"github.com/vtolstov/cloudagent/qga"
 )
 
 func slave() error {

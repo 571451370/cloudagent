@@ -7,7 +7,7 @@ Example:
 package guest_info
 
 import (
-	"github.com/vtolstov/qemu-ga/qga"
+	"github.com/vtolstov/cloudagent/qga"
 )
 
 func init() {
@@ -20,7 +20,7 @@ func init() {
 }
 
 func fnGuestInfo(req *qga.Request) *qga.Response {
-	res := &qga.Response{Id: req.Id}
+	res := &qga.Response{ID: req.ID}
 
 	res.Return = struct {
 		Version  string         `json:"version"`

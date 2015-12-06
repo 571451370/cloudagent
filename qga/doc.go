@@ -1,5 +1,5 @@
 /*
-Package qga - common functions for qemu-ga
+Package qga - common functions for cloudagent
 
 */
 package qga

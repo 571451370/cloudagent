@@ -14,6 +14,7 @@ const (
 	vioChannelFlags = unix.O_RDWR | ^unix.O_NONBLOCK | unix.O_CLOEXEC | unix.O_NDELAY
 )
 
+// VirtioChannel struct
 type VirtioChannel struct {
 	path string
 
@@ -26,10 +27,12 @@ type VirtioChannel struct {
 	m sync.Mutex
 }
 
+// NewVirtioChannel creates new virtio channel
 func NewVirtioChannel(path string) (*VirtioChannel, error) {
 	return &VirtioChannel{path: path}, nil
 }
 
+// Open open channel
 func (ch *VirtioChannel) Open() error {
 	var f *os.File
 	var err error
@@ -45,6 +48,7 @@ func (ch *VirtioChannel) Open() error {
 	return err
 }
 
+// Reset rests channel
 func (ch *VirtioChannel) Reset() error {
 	var err error
 	ch.m.Lock()
@@ -56,6 +60,7 @@ func (ch *VirtioChannel) Reset() error {
 	return ch.Open()
 }
 
+// Close close channel
 func (ch *VirtioChannel) Close() error {
 	if err := ch.f.Close(); err != nil {
 		return err
@@ -65,6 +70,7 @@ func (ch *VirtioChannel) Close() error {
 	return nil
 }
 
+// Read read from channel
 func (ch *VirtioChannel) Read(buffer []byte) (int, error) {
 	if ch.f == nil {
 		return 0, fmt.Errorf("try to read on closed channel")
@@ -72,6 +78,7 @@ func (ch *VirtioChannel) Read(buffer []byte) (int, error) {
 	return ch.f.Read(buffer)
 }
 
+// Write write to channel
 func (ch *VirtioChannel) Write(buffer []byte) (int, error) {
 	if ch.f == nil {
 		return 0, fmt.Errorf("try to write on closed channel")

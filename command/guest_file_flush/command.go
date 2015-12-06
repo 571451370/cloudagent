@@ -14,7 +14,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/vtolstov/qemu-ga/qga"
+	"github.com/vtolstov/cloudagent/qga"
 )
 
 func init() {
@@ -27,7 +27,7 @@ func init() {
 }
 
 func fnGuestFileFlush(req *qga.Request) *qga.Response {
-	res := &qga.Response{Id: req.Id}
+	res := &qga.Response{ID: req.ID}
 
 	reqData := struct {
 		Handle int `json:"handle"`

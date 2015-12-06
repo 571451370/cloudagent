@@ -13,7 +13,7 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/vtolstov/qemu-ga/qga"
+	"github.com/vtolstov/cloudagent/qga"
 )
 
 func init() {
@@ -26,7 +26,7 @@ func init() {
 }
 
 func fnGuestMemoryInfo(req *qga.Request) *qga.Response {
-	res := &qga.Response{Id: req.Id}
+	res := &qga.Response{ID: req.ID}
 
 	resData := struct {
 		MemoryTotal int64

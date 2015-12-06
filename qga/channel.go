@@ -6,7 +6,7 @@ import (
 	"sync"
 )
 
-// Channel interface provide communication channel with qemu-ga
+// Channel interface provide communication channel with cloudagent
 type Channel interface {
 	Open() error
 	Close() error
@@ -19,7 +19,7 @@ type Channel interface {
 type Request struct {
 	Execute string          `json:"execute"`
 	RawArgs json.RawMessage `json:"arguments,omitempty"`
-	Id      string          `json:"id,omitempty"`
+	ID      string          `json:"id,omitempty"`
 }
 
 // Error struct used to indicate error when processing command
@@ -34,9 +34,10 @@ type Error struct {
 type Response struct {
 	Return interface{} `json:"return,omitempty"`
 	Error  *Error      `json:"error,omitempty"`
-	Id     string      `json:"id,omitempty"`
+	ID     string      `json:"id,omitempty"`
 }
 
+// WorkerIO read/write bytes from channel
 func WorkerIO(ch Channel) error {
 	var wg sync.WaitGroup
 
@@ -78,6 +79,7 @@ func WorkerIO(ch Channel) error {
 	return nil
 }
 
+// WorkerMsg read/write messages
 func WorkerMsg() error {
 	return nil
 }

@@ -27,7 +27,7 @@ func makeImports(dirs []string) string {
 	imports := []string{}
 
 	for _, dir := range dirs {
-		imports = append(imports, fmt.Sprintf("\t_ \"github.com/vtolstov/qemu-ga/%s\"\n", dir))
+		imports = append(imports, fmt.Sprintf("\t_ \"github.com/vtolstov/cloudagent/%s\"\n", dir))
 	}
 
 	// Make things pretty

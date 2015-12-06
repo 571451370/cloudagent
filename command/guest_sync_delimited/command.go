@@ -12,7 +12,7 @@ package guest_sync_delimited
 import (
 	"encoding/json"
 
-	"github.com/vtolstov/qemu-ga/qga"
+	"github.com/vtolstov/cloudagent/qga"
 )
 
 func init() {
@@ -26,7 +26,7 @@ func init() {
 }
 
 func fnGuestSyncDelimited(req *qga.Request) *qga.Response {
-	res := &qga.Response{Id: req.Id}
+	res := &qga.Response{ID: req.ID}
 
 	reqData := struct {
 		ID int64 `json:"id"`

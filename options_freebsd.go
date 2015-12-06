@@ -11,5 +11,5 @@ var options struct {
 	Method     string   `short:"m" long:"method" default:"virtio-serial" description:"transport method: one of unix-listen, virtio-serial, or isa-serial (virtio-serial is the default)"`
 	Path       string   `short:"p" long:"path" default:"/dev/ttyS0" description:"device/socket path (the default for virtio-serial is: /dev/virtio-ports/org.qemu.guest_agent.0, the default for isa-serial is: /dev/ttyS0)"`
 	LogFile    string   `short:"l" long:"logfile" default:"stderr" description:"set logfile path, logs to stderr by default"`
-	PidFile    string   `short:"f" long:"pidfile" default:"/var/run/qemu-ga.pid" description:"specify pidfile (default is /var/run/qemu-ga.pid)"`
+	PidFile    string   `short:"f" long:"pidfile" default:"/var/run/cloudagent.pid" description:"specify pidfile (default is /var/run/cloudagent.pid)"`
 }

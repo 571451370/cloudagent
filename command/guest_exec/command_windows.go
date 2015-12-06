@@ -28,7 +28,7 @@ import (
 	"strings"
 	"syscall"
 
-	"github.com/vtolstov/qemu-ga/qga"
+	"github.com/vtolstov/cloudagent/qga"
 )
 
 const (
@@ -46,7 +46,7 @@ func init() {
 }
 
 func fnGuestExec(req *qga.Request) *qga.Response {
-	res := &qga.Response{Id: req.Id}
+	res := &qga.Response{ID: req.ID}
 
 	reqData1 := struct {
 		Command string `json:"command"`
@@ -89,7 +89,7 @@ exec2:
 }
 
 func fnGuestExec1(req *qga.Request) *qga.Response {
-	res := &qga.Response{Id: req.Id}
+	res := &qga.Response{ID: req.ID}
 
 	resData := struct {
 		ExitCode int
@@ -129,7 +129,7 @@ func fnGuestExec1(req *qga.Request) *qga.Response {
 }
 
 func fnGuestExec2(req *qga.Request) *qga.Response {
-	res := &qga.Response{Id: req.Id}
+	res := &qga.Response{ID: req.ID}
 
 	stdIn := bytes.NewBuffer(nil)
 	stdOut := bytes.NewBuffer(nil)

@@ -40,7 +40,7 @@ func master() error {
 			l.Debug(err.Error())
 		}
 
-		for _, pid := range getPids("qemu-ga", true) {
+		for _, pid := range getPids("cloudagent", true) {
 			unix.Kill(pid, unix.SIGTERM)
 		}
 	}
@@ -55,7 +55,7 @@ func master() error {
 		stdOut := bytes.NewBuffer(nil)
 		stdErr := bytes.NewBuffer(nil)
 		for {
-			cmd := exec.Command("qemu-ga")
+			cmd := exec.Command("cloudagent")
 			cmd.Dir = "/"
 			cmd.Env = append(cmd.Env, "master", "false")
 			cmd.Stdin = nil

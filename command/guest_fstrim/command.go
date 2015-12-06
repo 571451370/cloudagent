@@ -13,7 +13,7 @@ import (
 	"encoding/json"
 	"os/exec"
 
-	"github.com/vtolstov/qemu-ga/qga"
+	"github.com/vtolstov/cloudagent/qga"
 )
 
 func init() {
@@ -27,7 +27,7 @@ func init() {
 
 // TODO: USE NATIVE SYSCALL
 func fnGuestFstrim(req *qga.Request) *qga.Response {
-	res := &qga.Response{Id: req.Id}
+	res := &qga.Response{ID: req.ID}
 	//	r := ioctl.FsTrimRange{Start: 0, Length: -1, MinLength: 0}
 
 	reqData := struct {
