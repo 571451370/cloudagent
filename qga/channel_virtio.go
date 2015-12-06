@@ -41,7 +41,7 @@ func (ch *VirtioChannel) Open() error {
 		return err
 	}
 	ch.f = f
-	ch.r = bufio.NewReaderSize(f, QGA_MAX_MESSAGE_LEN)
+	ch.r = bufio.NewReaderSize(f, MaxMessageLength)
 	ch.req = make(chan *Request)
 	ch.res = make(chan *Response, 1)
 

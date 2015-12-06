@@ -46,7 +46,7 @@ func (ch *FdChannel) Open() error {
 	f = os.NewFile(uintptr(fd), ch.path)
 
 	ch.f = f
-	ch.r = bufio.NewReaderSize(f, QGA_MAX_MESSAGE_LEN)
+	ch.r = bufio.NewReaderSize(f, MaxMessageLength)
 	ch.req = make(chan *Request)
 	ch.res = make(chan *Response, 1)
 

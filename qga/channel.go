@@ -47,7 +47,7 @@ func WorkerIO(ch Channel) error {
 	go func() {
 		defer wg.Done()
 		var err error
-		buffer := make([]byte, QGA_MAX_MESSAGE_LEN)
+		buffer := make([]byte, MaxMessageLength)
 		var n int
 
 		for {
@@ -64,7 +64,7 @@ func WorkerIO(ch Channel) error {
 	go func() {
 		defer wg.Done()
 		var err error
-		buffer := make([]byte, QGA_MAX_MESSAGE_LEN)
+		buffer := make([]byte, MaxMessageLength)
 		//var n int
 
 		if _, err = ch.Write(buffer); err == nil {
