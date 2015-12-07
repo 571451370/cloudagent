@@ -1,5 +1,5 @@
 /*
-guest-file-read - read file inside guest via fd
+Package guest_file_read - read file inside guest via fd
 
 Example:
         { "execute": "guest-file-read", "arguments": {
@@ -41,7 +41,7 @@ func fnGuestFileRead(req *qga.Request) *qga.Response {
 	resData := struct {
 		Count  int    `json:"count"`
 		BufB64 string `json:"buf-b64"`
-		Eof    bool   `json:"eof"`
+		EOF    bool   `json:"eof"`
 	}{}
 
 	err := json.Unmarshal(req.RawArgs, &reqData)
@@ -61,7 +61,7 @@ func fnGuestFileRead(req *qga.Request) *qga.Response {
 			case io.EOF:
 				resData.Count = n
 				resData.BufB64 = base64.StdEncoding.EncodeToString(buffer)
-				resData.Eof = true
+				resData.EOF = true
 				res.Return = resData
 			default:
 				res.Error = &qga.Error{Code: -1, Desc: err.Error()}

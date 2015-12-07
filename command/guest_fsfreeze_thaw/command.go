@@ -1,10 +1,10 @@
 /*
-guest-fsfreeze-thaw - run unfreeze on all mounted file systems
+Package guest_fsfreeze_thaw - run unfreeze on all mounted file systems
 
 Example:
         { "execute": "guest-fsfreeze-thaw", "arguments": {} }
 */
-package guest_fsfreeze_freeze
+package guest_fsfreeze_thaw
 
 import (
 	"os"
@@ -43,11 +43,12 @@ func fnGuestFsfreezeThaw(req *qga.Request) *qga.Response {
 			return res
 		}
 		err = ioctl.Fithaw(uintptr(f.Fd()), uintptr(unsafe.Pointer(&r)))
+		f.Close()
 		if err != nil {
 			res.Error = &qga.Error{Code: -1, Desc: err.Error()}
 			return res
 		}
-		resData += 1
+		resData++
 	}
 
 	res.Return = resData

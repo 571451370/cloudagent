@@ -76,7 +76,7 @@ func resizefs(path string) error {
 		}
 
 		if strings.HasPrefix(line, device) {
-			partnum += 1
+			partnum++
 			///test3        *  16384 204799  188416  92M  5 Extended
 			ps := strings.Fields(line)
 			if ps[1] == "*" {
@@ -187,30 +187,30 @@ func resizefs(path string) error {
 	return nil
 }
 
-type Dev struct {
+type dev struct {
 	Major uint64
 	Minor uint64
 }
 
-func (d *Dev) String() string {
+func (d *dev) String() string {
 	return fmt.Sprintf("%d:%d", d.Major, d.Minor)
 }
 
-func (d *Dev) Int() int {
+func (d *dev) Int() int {
 	return int(d.Major*256 + d.Minor)
 }
 
-func findFs(path string) (*Dev, error) {
+func findFs(path string) (*dev, error) {
 	var st syscall.Stat_t
 
 	err := syscall.Stat(path, &st)
 	if err != nil {
 		return nil, err
 	}
-	return &Dev{Major: uint64(st.Dev / 256), Minor: uint64(st.Dev % 256)}, nil
+	return &dev{Major: uint64(st.Dev / 256), Minor: uint64(st.Dev % 256)}, nil
 }
 
-func findBlock(start string, s *Dev) (*Dev, error) {
+func findBlock(start string, s *dev) (*dev, error) {
 	var err error
 	fis, err := ioutil.ReadDir(start)
 	if err != nil {
@@ -223,13 +223,13 @@ func findBlock(start string, s *Dev) (*Dev, error) {
 		}
 		if _, err := os.Stat(filepath.Join(start, "dev")); err == nil {
 			if buf, err := ioutil.ReadFile(filepath.Join(start, "dev")); err == nil {
-				dev := strings.TrimSpace(string(buf))
-				if s.String() == dev {
+				devstr := strings.TrimSpace(string(buf))
+				if s.String() == devstr {
 					if buf, err = ioutil.ReadFile(filepath.Join(filepath.Dir(start), "dev")); err == nil {
 						majorminor := strings.Split(strings.TrimSpace(string(buf)), ":")
 						major, _ := strconv.Atoi(majorminor[0])
 						minor, _ := strconv.Atoi(majorminor[1])
-						return &Dev{Major: uint64(major), Minor: uint64(minor)}, nil
+						return &dev{Major: uint64(major), Minor: uint64(minor)}, nil
 					}
 				}
 			}

@@ -1,5 +1,5 @@
 /*
-guest-exec-status - get status from running command
+Package guest_exec_status - get status from running command
 
 Example:
         { "execute": "guest-exec-status", "arguments": {

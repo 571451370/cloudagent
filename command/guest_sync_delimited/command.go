@@ -1,5 +1,5 @@
 /*
-guest-sync-delimited - sync host<->guest communication
+Package guest_sync_delimited - sync host<->guest communication
 
 Example:
         { "execute": "guest-sync-delimited", "arguments": {

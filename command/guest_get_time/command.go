@@ -1,10 +1,10 @@
 /*
-guest-get-time - get current guest time in nanoseconds
+Package guest_get_time - get current guest time in nanoseconds
 
 Example:
         { "execute": "guest-get-time", "arguments": {}}
 */
-package guest_set_time
+package guest_get_time
 
 import (
 	"time"

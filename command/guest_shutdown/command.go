@@ -1,5 +1,5 @@
 /*
-guest-shutdown - shutdown guest via agent
+Package guest_shutdown - shutdown guest via agent
 
 Example:
         { "execute": "guest-shutdown", "arguments": {

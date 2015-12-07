@@ -1,5 +1,5 @@
 /*
-guest-info - request agent info from guest
+Package guest_info - request agent info from guest
 
 Example:
         { "execute": "guest-info", "arguments": {}}

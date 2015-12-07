@@ -1,5 +1,5 @@
 /*
-guest-file-write - write file to fd inside guest
+Package guest_file_write - write file to fd inside guest
 
 Example:
         { "execute": "guest-file-write", "arguments": {
@@ -42,7 +42,7 @@ func fnGuestFileWrite(req *qga.Request) *qga.Response {
 
 	resData := struct {
 		Count int  `json:"count"`
-		Eof   bool `json:"eof"`
+		EOF   bool `json:"eof"`
 	}{}
 
 	err := json.Unmarshal(req.RawArgs, &reqData)
@@ -65,7 +65,7 @@ func fnGuestFileWrite(req *qga.Request) *qga.Response {
 				res.Return = resData
 			case io.EOF:
 				resData.Count = n
-				resData.Eof = true
+				resData.EOF = true
 				res.Return = resData
 			default:
 				res.Error = &qga.Error{Code: -1, Desc: err.Error()}

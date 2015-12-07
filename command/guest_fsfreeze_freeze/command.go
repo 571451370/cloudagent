@@ -1,5 +1,5 @@
 /*
-guest-fsfreeze-freeze - run fsfreeze on all mounted file systems
+Package guest_fsfreeze_freeze - run fsfreeze on all mounted file systems
 
 Example:
         { "execute": "guest-fsfreeze-freeze", "arguments": {} }
@@ -45,6 +45,7 @@ func fnGuestFsfreezeFreeze(req *qga.Request) *qga.Response {
 			return res
 		}
 		err = ioctl.Fifreeze(uintptr(f.Fd()), uintptr(unsafe.Pointer(&r)))
+		f.Close()
 		if err != nil {
 			unfreeze()
 			res.Error = &qga.Error{Code: -1, Desc: err.Error()}
@@ -52,7 +53,7 @@ func fnGuestFsfreezeFreeze(req *qga.Request) *qga.Response {
 		}
 		freezed = append(freezed, fs.Path)
 		qga.StoreSet("guest-fsfreeze", "paths", freezed)
-		resData += 1
+		resData++
 	}
 
 	res.Return = resData
@@ -66,6 +67,7 @@ func unfreeze() {
 		for _, path := range paths.([]string) {
 			if f, err := os.Open(path); err == nil {
 				ioctl.Fithaw(uintptr(f.Fd()), uintptr(unsafe.Pointer(&r)))
+				f.Close()
 			}
 		}
 	}

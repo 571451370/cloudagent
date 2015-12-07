@@ -1,10 +1,10 @@
 /*
-guest-fsfreeze-status - get status of file systems
+Package guest_fsfreeze_status - get status of file systems
 
 Example:
         { "execute": "guest-fsfreeze-status", "arguments": {} }
 */
-package guest_fsfreeze_freeze
+package guest_fsfreeze_status
 
 import "github.com/vtolstov/cloudagent/qga"
 

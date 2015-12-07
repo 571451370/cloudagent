@@ -1,5 +1,5 @@
 /*
-guest-file-close - close file handle
+Package guest_file_close - close file handle
 
 Example:
         { "execute": "guest-file-close", "arguments": {

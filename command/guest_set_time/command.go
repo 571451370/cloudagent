@@ -1,7 +1,7 @@
 // +build linux freebsd openbsd netbsd
 
 /*
-guest-set-time - set guest time
+Package guest_set_time - set guest time
 
 Example:
         { "execute": "guest-set-time", "arguments": {

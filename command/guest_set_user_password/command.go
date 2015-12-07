@@ -1,5 +1,5 @@
 /*
-guest-set-user-password - sync host<->guest communication
+Package guest_set_user_password - sync host<->guest communication
 
 Example:
         { "execute": "guest-set-user-password", "arguments": {

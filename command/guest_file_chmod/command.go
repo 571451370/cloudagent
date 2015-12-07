@@ -1,5 +1,5 @@
 /*
-guest-file-chmod - set file mode
+Package guest_file_chmod - set file mode
 
 Example:
         { "execute": "guest-file-chmod", "arguments": {

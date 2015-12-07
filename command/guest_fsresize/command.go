@@ -1,5 +1,5 @@
 /*
-guest-fscresize - run resize file system
+Package guest_fsresize - run resize file system
 
 Example:
         { "execute": "guest-fsresize", "arguments": {
@@ -20,7 +20,6 @@ func init() {
 		Name:    "guest-fsresize",
 		Func:    fnGuestFsresize,
 		Enabled: true,
-		Returns: true,
 	})
 }
 

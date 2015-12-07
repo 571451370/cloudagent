@@ -1,5 +1,5 @@
 /*
-guest-file-open - open file inside guest and returns it handle
+Package guest_file_open - open file inside guest and returns it handle
 
 Example:
         { "execute": "guest-file-open", "arguments": {

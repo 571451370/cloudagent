@@ -1,5 +1,5 @@
 /*
-guest-sync - sync host<->guest communication
+Package guest_sync - sync host<->guest communication
 
 Example:
         { "execute": "guest-sync", "arguments": {

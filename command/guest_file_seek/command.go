@@ -1,5 +1,5 @@
 /*
-guest-file-seek - seek on file
+Package guest_file_seek - seek on file
 
 Example:
         { "execute": "guest-file-seek", "arguments": {
@@ -41,7 +41,7 @@ func fnGuestFileSeek(req *qga.Request) *qga.Response {
 
 	resData := struct {
 		Pos int  `json:"position"`
-		Eof bool `json:"eof"`
+		EOF bool `json:"eof"`
 	}{}
 
 	err := json.Unmarshal(req.RawArgs, &reqData)
@@ -57,7 +57,7 @@ func fnGuestFileSeek(req *qga.Request) *qga.Response {
 				res.Return = resData
 			case io.EOF:
 				resData.Pos = int(n)
-				resData.Eof = true
+				resData.EOF = true
 				res.Return = resData
 			default:
 				res.Error = &qga.Error{Code: -1, Desc: err.Error()}

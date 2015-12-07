@@ -1,5 +1,5 @@
 /*
-guest-memory-info - get guest memory info
+Package guest_memory_info - get guest memory info
 
 Example:
         { "execute": "guest-memory-info", "arguments": {}}

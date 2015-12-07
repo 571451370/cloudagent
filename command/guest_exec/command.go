@@ -1,7 +1,7 @@
 // +build !windows
 
 /*
-guest-exec - run command inside vm
+Package guest_exec - run command inside vm
 
 Old command version syntax:
         { "execute": "guest-exec", "arguments": {
@@ -34,7 +34,8 @@ import (
 )
 
 const (
-	MAX_BUFFERED_OUTPUT = 16 * 1024 * 1024
+	// MaxBufferedOutput is the maximum amout of data to save
+	MaxBufferedOutput = 16 * 1024 * 1024
 )
 
 func init() {
@@ -225,15 +226,15 @@ func fnExecWait(cmd *exec.Cmd, stdOut *bytes.Buffer, stdErr *bytes.Buffer) {
 	s := iface.(*qga.ExecStatus)
 	s.ExitCode = &code
 	s.Exited = cmd.ProcessState.Exited()
-	if stdOut.Len() > MAX_BUFFERED_OUTPUT {
+	if stdOut.Len() > MaxBufferedOutput {
 		s.OutTrunc = true
-		stdOut.Truncate(MAX_BUFFERED_OUTPUT)
+		stdOut.Truncate(MaxBufferedOutput)
 	}
 	s.OutData = base64.StdEncoding.EncodeToString(stdOut.Bytes())
 	stdOut.Reset()
-	if stdErr.Len() > MAX_BUFFERED_OUTPUT {
+	if stdErr.Len() > MaxBufferedOutput {
 		s.ErrTrunc = true
-		stdErr.Truncate(MAX_BUFFERED_OUTPUT)
+		stdErr.Truncate(MaxBufferedOutput)
 	}
 	s.ErrData = base64.StdEncoding.EncodeToString(stdErr.Bytes())
 	stdErr.Reset()

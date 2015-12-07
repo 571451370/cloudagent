@@ -1,7 +1,7 @@
 // +build linux
 
 /*
-guest-stats - returns disk and memory stats from guest
+Package guest_stats - returns disk and memory stats from guest
 
 Example:
         { "execute": "guest-stats", "arguments": {}}

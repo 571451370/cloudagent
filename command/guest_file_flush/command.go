@@ -1,5 +1,5 @@
 /*
-guest-file-flush - flush buffered data to file
+Package guest_file_flush - flush buffered data to file
 
 Example:
         { "execute": "guest-file-flush", "arguments": {

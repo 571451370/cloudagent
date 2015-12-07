@@ -1,7 +1,7 @@
 // +build !windows
 
 /*
-guest-agent-update - update cloudagent inside vm
+Package guest_agent_update - update cloudagent inside vm
 
 Example:
         { "execute": "guest-agent-update", "arguments": {

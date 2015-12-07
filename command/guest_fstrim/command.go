@@ -1,5 +1,5 @@
 /*
-guest-fstrim - run fstrim on path
+Package guest_fstrim - run fstrim on path
 
 Example:
         { "execute": "guest-fstrim", "arguments": {
@@ -11,9 +11,13 @@ package guest_fstrim
 
 import (
 	"encoding/json"
+	"os"
 	"os/exec"
 
+	"unsafe"
+
 	"github.com/vtolstov/cloudagent/qga"
+	"github.com/vtolstov/go-ioctl"
 )
 
 func init() {
@@ -56,17 +60,18 @@ func fnGuestFstrim(req *qga.Request) *qga.Response {
 		res.Error = &qga.Error{Code: -1, Desc: err.Error()}
 		return res
 	}
-	/*
-		if f, err := os.OpenFile("/", os.O_RDONLY, os.FileMode(0400)); err == nil {
-			defer f.Close()
-			err = ioctl.Fitrim(uintptr(f.Fd()), uintptr(unsafe.Pointer(&r)))
-	*/
+
+	r := 0
+
 	for _, fs := range fslist {
 		switch fs.Type {
 		case "ufs", "ffs":
 			err = exec.Command("fsck_"+fs.Type, "-B", "-E", fs.Path).Run()
 		default:
-			err = exec.Command("fstrim", fs.Path).Run()
+			if f, err := os.Open(fs.Path); err == nil {
+				ioctl.Fitrim(uintptr(f.Fd()), uintptr(unsafe.Pointer(&r)))
+				f.Close()
+			}
 		}
 		rpath := &resPath{Path: fs.Path}
 		if err != nil {

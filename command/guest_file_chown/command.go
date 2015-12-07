@@ -1,5 +1,5 @@
 /*
-guest-file-chown - set file owner
+Package guest_file_chown - set file owner
 
 Example:
         { "execute": "guest-file-chown", "arguments": {
@@ -33,11 +33,11 @@ func fnGuestFileChown(req *qga.Request) *qga.Response {
 	res := &qga.Response{ID: req.ID}
 
 	reqData := struct {
-		Uid    int    `json:"uid"`
-		Gid    int    `json:"gid"`
+		UID    int    `json:"uid"`
+		GID    int    `json:"gid"`
 		Handle int    `json:"handle,omitempty"`
 		Path   string `json:"path,omitempty"`
-	}{}
+	}{UID: -1, GID: -1}
 
 	err := json.Unmarshal(req.RawArgs, &reqData)
 	if err != nil {
@@ -52,13 +52,13 @@ func fnGuestFileChown(req *qga.Request) *qga.Response {
 
 	switch {
 	case reqData.Path != "":
-		if err = os.Chown(reqData.Path, reqData.Uid, reqData.Gid); err != nil {
+		if err = os.Chown(reqData.Path, reqData.UID, reqData.GID); err != nil {
 			res.Error = &qga.Error{Code: -1, Desc: err.Error()}
 		}
 	case reqData.Handle != 0:
 		if iface, ok := qga.StoreGet("guest-file", reqData.Handle); ok {
 			f := iface.(*os.File)
-			if err = f.Chown(reqData.Uid, reqData.Gid); err != nil {
+			if err = f.Chown(reqData.UID, reqData.GID); err != nil {
 				res.Error = &qga.Error{Code: -1, Desc: err.Error()}
 			}
 		} else {

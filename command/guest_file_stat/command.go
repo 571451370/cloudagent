@@ -1,5 +1,5 @@
 /*
-guest-file-stat - get stat on file
+Package guest_file_stat - get stat on file
 
 Example:
         { "execute": "guest-file-stat", "arguments": {
@@ -41,8 +41,8 @@ func fnGuestFileStat(req *qga.Request) *qga.Response {
 		Name   string `json:"name"`
 		Size   int64  `json:"size"`
 		Mode   uint32 `json:"mode"`
-		Uid    int    `json:"uid,omitempty"`
-		Gid    int    `json:"gid,omitempty"`
+		UID    int    `json:"uid,omitempty"`
+		GID    int    `json:"gid,omitempty"`
 		Modify int64  `json:"modify"`
 	}{}
 
