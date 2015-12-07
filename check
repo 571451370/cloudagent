@@ -1,5 +1,7 @@
 #!/bin/sh
 
-go test ./...
-go vet ./... | grep -vE "^vendor/"
-golint ./... | grep -vE "^vendor/"
+go test $(go list ./... | grep -v vendor/)
+go vet $(go list ./... | grep -v vendor/)
+for p in $(go list ./... | grep -v vendor/); do
+    golint $p 2>&1 | grep -v "underscore in package name";
+done
