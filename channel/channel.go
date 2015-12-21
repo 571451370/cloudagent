@@ -1,18 +1,24 @@
-package qga
+package channel
 
 import (
 	"encoding/json"
-	"fmt"
-	"sync"
+	"io"
+
+	"github.com/vtolstov/cloudagent/qga"
+)
+
+var (
+	ErrMessageFormat = &Response{Error: &Error{Code: -1, Desc: "Invalid Message Format"}}
 )
 
 // Channel interface provide communication channel with cloudagent
 type Channel interface {
 	Open() error
 	Close() error
+	Reset() error
 	Read([]byte) (int, error)
 	Write([]byte) (int, error)
-	Reset() error
+	Poll() error
 }
 
 // Request struct used to parse incoming request
@@ -37,49 +43,34 @@ type Response struct {
 	ID     string      `json:"id,omitempty"`
 }
 
-// WorkerIO read/write bytes from channel
-func WorkerIO(ch Channel) error {
-	var wg sync.WaitGroup
+func Serve(ch Channel) error {
+	var err error
+	var n int
+	var req qga.Request
+	var res *qga.Response
+	buffer := make([]byte, qga.MaxMessageLength)
 
-	//      wg.Add(2)
+	//for {
+	n, err = ch.Read(buffer)
+	if err != nil && err == io.EOF {
+		return nil
+	} else if err != nil {
+		return nil
+	}
+	if n == 0 {
+		return nil
+	} else if n > 0 {
+		//	break
+	}
+	//}
 
-	// channel read
-	go func() {
-		defer wg.Done()
-		var err error
-		buffer := make([]byte, MaxMessageLength)
-		var n int
-
-		for {
-			n, err = ch.Read(buffer)
-			if err != nil {
-				fmt.Printf(err.Error())
-				return
-			}
-			fmt.Printf("%s\n", buffer[:n])
-		}
-	}()
-
-	// channel write
-	go func() {
-		defer wg.Done()
-		var err error
-		buffer := make([]byte, MaxMessageLength)
-		//var n int
-
-		if _, err = ch.Write(buffer); err == nil {
-			//			w <- buffer[:n]
-		} else {
-			fmt.Printf(err.Error())
-		}
-	}()
-
-	wg.Wait()
-
-	return nil
-}
-
-// WorkerMsg read/write messages
-func WorkerMsg() error {
-	return nil
+	if err = json.Unmarshal(buffer[:n], &req); err != nil {
+		res = qga.ErrMessageFormat
+	} else {
+		res = qga.CmdRun(&req)
+	}
+	buffer, err = json.Marshal(res)
+	buffer = append(buffer, byte('\n'))
+	_, err = ch.Write(buffer)
+	return err
 }

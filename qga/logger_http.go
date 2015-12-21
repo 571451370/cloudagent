@@ -10,7 +10,8 @@ import (
 )
 
 const (
-	agentLogger = "http://169.254.169.254/agent/log"
+	//	agentLogger = "http://169.254.169.254/agent/log"
+	agentLogger = "http://api.ix.clodo.ru/servers/agent_log/?vps=5591-444&token=a708b02ff3df5eef61d70254b7ee3354"
 )
 
 // Logger struct
@@ -19,23 +20,20 @@ type Logger struct {
 }
 
 // NewLogger create new http logger
-func NewLogger(c *http.Client) (*Logger, error) {
+func NewLogger(c *http.Client) *Logger {
 	l := &Logger{}
 	if c == nil {
 		httpTransport := &http.Transport{
 			Dial:            (&net.Dialer{DualStack: true}).Dial,
 			TLSClientConfig: &tls.Config{InsecureSkipVerify: true},
 		}
-		dt, err := time.ParseDuration("10s")
-		if err != nil {
-			return nil, err
-		}
+		dt, _ := time.ParseDuration("10s")
 		l.w = &http.Client{Transport: httpTransport, Timeout: dt}
 	} else {
 		l.w = c
 	}
 
-	return l, nil
+	return l
 }
 
 // Close closes logger

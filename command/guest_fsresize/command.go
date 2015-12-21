@@ -1,3 +1,5 @@
+// +build !openbsd,!windows
+
 /*
 Package guest_fsresize - run resize file system
 

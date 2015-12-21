@@ -5,6 +5,7 @@ import (
 	"io/ioutil"
 	"os"
 	"os/exec"
+	"time"
 
 	"golang.org/x/sys/unix"
 )
@@ -18,60 +19,60 @@ func master() error {
 	}
 
 	if err = os.Chdir("/"); err != nil {
-		l.Debug(err.Error())
+		return err
 	}
 
 	unix.Umask(0)
 
 	if master {
 		if err = ioutil.WriteFile("/proc/self/oom_score_adj", []byte("-1000"), 0644); err != nil {
-			l.Debug(err.Error())
-		}
-
-		if err = ioutil.WriteFile("/proc/self/oom_adj", []byte("-17"), 0644); err != nil {
-			l.Debug(err.Error())
+			if err = ioutil.WriteFile("/proc/self/oom_adj", []byte("-17"), 0644); err != nil {
+				return err
+			}
 		}
 
 		if err = unix.Setpgid(0, 0); err != nil {
-			l.Debug(err.Error())
+			l.Info("setpgid: " + err.Error())
 		}
 
 		if _, err = unix.Setsid(); err != nil {
-			l.Debug(err.Error())
+			l.Info("setsid: " + err.Error())
 		}
 
-		for _, pid := range getPids("cloudagent", true) {
+		for _, pid := range getPids(os.Args[0], true) {
 			unix.Kill(pid, unix.SIGTERM)
 		}
 	}
-
-	/*
-		syscall.Close(0)
-		syscall.Close(1)
-		syscall.Close(2)
-	*/
 
 	if master {
 		stdOut := bytes.NewBuffer(nil)
 		stdErr := bytes.NewBuffer(nil)
 		for {
-			cmd := exec.Command("cloudagent")
+			cmd := exec.Command(os.Args[0])
 			cmd.Dir = "/"
-			cmd.Env = append(cmd.Env, "master", "false")
+			cmd.Env = append(cmd.Env, "master=false")
 			cmd.Stdin = nil
 			cmd.Stdout = stdOut
 			cmd.Stderr = stdErr
 			cmd.ExtraFiles = nil
 			cmd.Run()
-			stdErr.Reset()
-			stdOut.Reset()
+			if stdErr.Len() > 0 {
+				l.Error(string(stdErr.Bytes()))
+				stdErr.Reset()
+			}
+			if stdOut.Len() > 0 {
+				l.Info(string(stdOut.Bytes()))
+				stdOut.Reset()
+			}
+			time.Sleep(5 * time.Second)
 		}
 	} else {
-		for {
-			if err = slave(); err != nil {
-				l.Error(err.Error())
-			}
+		//		for {
+		if err = slave(); err != nil {
+			return err
 		}
+		//			time.Sleep(5 * time.Second)
+		//		}
 	}
-
+	return nil
 }

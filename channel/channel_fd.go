@@ -1,4 +1,6 @@
-package qga
+// +build ignore
+
+package channel
 
 import (
 	"bufio"
@@ -6,6 +8,8 @@ import (
 	"os"
 	"strconv"
 	"sync"
+
+	"github.com/vtolstov/cloudagent/qga"
 
 	"golang.org/x/sys/unix"
 )
@@ -46,7 +50,7 @@ func (ch *FdChannel) Open() error {
 	f = os.NewFile(uintptr(fd), ch.path)
 
 	ch.f = f
-	ch.r = bufio.NewReaderSize(f, MaxMessageLength)
+	ch.r = bufio.NewReaderSize(f, qga.MaxMessageLength)
 	ch.req = make(chan *Request)
 	ch.res = make(chan *Response, 1)
 

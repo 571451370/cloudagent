@@ -1,6 +1,9 @@
 package qga
 
-import "fmt"
+import (
+	"encoding/json"
+	"fmt"
+)
 
 // Command struct contains supported commands
 type Command struct {
@@ -26,11 +29,12 @@ func RegisterCommand(cmd *Command) error {
 
 // ListCommands returns commands
 func ListCommands() []*Command {
-	var commands []*Command
+	var ret []*Command
 	for _, cmd := range commands {
-		commands = append(commands, cmd)
+		ret = append(ret, cmd)
 	}
-	return commands
+
+	return ret
 }
 
 // CmdRun executes command
@@ -52,4 +56,30 @@ func CmdRun(req *Request) *Response {
 	}
 
 	return &Response{Error: &Error{Class: "CommandNotFound", Desc: fmt.Sprintf("command %s not found", req.Execute)}}
+}
+
+var (
+	ErrMessageFormat = &Response{Error: &Error{Code: -1, Desc: "Invalid Message Format"}}
+)
+
+// Request struct used to parse incoming request
+type Request struct {
+	Execute string          `json:"execute"`
+	RawArgs json.RawMessage `json:"arguments,omitempty"`
+	ID      string          `json:"id,omitempty"`
+}
+
+// Error struct used to indicate error when processing command
+type Error struct {
+	Class  string `json:"class,omitempty"`
+	Desc   string `json:"desc,omitempty"`
+	Bufb64 string `json:"bufb64,omitempty"`
+	Code   int    `json:"code,omitempty"`
+}
+
+// Response struct used to encode response from command
+type Response struct {
+	Return interface{} `json:"return,omitempty"`
+	Error  *Error      `json:"error,omitempty"`
+	ID     string      `json:"id,omitempty"`
 }

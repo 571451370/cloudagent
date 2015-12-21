@@ -1,4 +1,6 @@
-package qga
+// +build ignore
+
+package channel
 
 import (
 	"os"
