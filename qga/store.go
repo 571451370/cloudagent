@@ -3,7 +3,7 @@ package qga
 import "sync"
 
 var (
-	storeMutext *sync.Mutex
+	storeMutext sync.Mutex
 	store       = make(map[string]map[interface{}]interface{})
 )
 
@@ -11,7 +11,9 @@ var (
 func StoreSet(ns string, k interface{}, v interface{}) {
 	storeMutext.Lock()
 	defer storeMutext.Unlock()
-	store[ns][k] = v
+	m := make(map[interface{}]interface{})
+	m[k] = v
+	store[ns] = m
 }
 
 // StoreGet get variable k from namespace ns

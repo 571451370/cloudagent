@@ -30,7 +30,7 @@ func (ch *VirtioChannel) Poll( /*block bool*/ ) error {
 	events := make([]unix.EpollEvent, 32)
 
 	for {
-		nevents, err := unix.EpollWait(ch.pfd, events, 1000*60*1)
+		nevents, err := unix.EpollWait(ch.pfd, events, 1000*60*2)
 		switch err {
 		case nil:
 			if nevents == 0 {
