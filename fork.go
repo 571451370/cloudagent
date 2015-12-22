@@ -3,12 +3,13 @@
 package main
 
 import (
+	"os"
 	"os/exec"
 	"syscall"
 )
 
 func fork() error {
-	cmd := exec.Command("cloudagent")
+	cmd := exec.Command(os.Args[0])
 	cmd.Dir = "/"
 	cmd.Stdin = nil
 	cmd.Stdout = nil

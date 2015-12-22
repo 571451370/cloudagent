@@ -11,7 +11,7 @@ import (
 )
 
 var (
-	l *qga.Logger
+	l = qga.NewLogger(nil)
 )
 
 func main() {
@@ -41,7 +41,7 @@ func main() {
 		os.Exit(0)
 	}
 
-	l = qga.NewLogger(nil)
+	//	l = qga.NewLogger(nil)
 
 	if err = master(); err != nil {
 		fmt.Printf(err.Error())

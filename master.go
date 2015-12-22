@@ -32,11 +32,11 @@ func master() error {
 		}
 
 		if err = unix.Setpgid(0, 0); err != nil {
-			l.Info("setpgid: " + err.Error())
+			//l.Info("setpgid: " + err.Error())
 		}
 
 		if _, err = unix.Setsid(); err != nil {
-			l.Info("setsid: " + err.Error())
+			//l.Info("setsid: " + err.Error())
 		}
 
 		for _, pid := range getPids(os.Args[0], true) {
