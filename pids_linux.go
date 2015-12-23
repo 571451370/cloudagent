@@ -2,13 +2,11 @@ package main
 
 import (
 	"os"
-	"path/filepath"
 
 	"github.com/vtolstov/go-ps"
 )
 
 func getPids(name string, filter bool) []int {
-	name = filepath.Base(name)
 	pids := []int{}
 	procs, err := ps.FindProcessByExecutable(name)
 

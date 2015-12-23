@@ -5,6 +5,7 @@ import (
 	"io/ioutil"
 	"os"
 	"os/exec"
+	"path/filepath"
 	"time"
 
 	"golang.org/x/sys/unix"
@@ -42,6 +43,10 @@ func master() error {
 		for _, pid := range getPids(os.Args[0], true) {
 			unix.Kill(pid, unix.SIGTERM)
 		}
+		for _, pid := range getPids(filepath.Base(os.Args[0]), true) {
+			unix.Kill(pid, unix.SIGTERM)
+		}
+
 	}
 
 	if master {
