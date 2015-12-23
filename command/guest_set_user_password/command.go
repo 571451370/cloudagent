@@ -15,6 +15,7 @@ import (
 	"encoding/base64"
 	"encoding/json"
 	"fmt"
+	"os"
 	"os/exec"
 
 	"github.com/vtolstov/cloudagent/qga"
@@ -57,6 +58,7 @@ func fnGuestSetUserPassword(req *qga.Request) *qga.Response {
 	}
 
 	cmd := exec.Command("chpasswd", args...)
+	cmd.Env = append(cmd.Env, os.Environ()...)
 
 	stdin, err := cmd.StdinPipe()
 	if err != nil {

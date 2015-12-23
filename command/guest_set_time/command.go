@@ -13,6 +13,7 @@ package guest_set_time
 
 import (
 	"encoding/json"
+	"os"
 	"os/exec"
 
 	"github.com/vtolstov/cloudagent/qga"
@@ -55,7 +56,9 @@ func fnGuestSetTime(req *qga.Request) *qga.Response {
 		args = append(args, "-s")
 	}
 
-	err = exec.Command("hwclock", args...).Run()
+	cmd := exec.Command("hwclock", args...)
+	cmd.Env = append(cmd.Env, os.Environ()...)
+	err = cmd.Run()
 	if err != nil {
 		res.Error = &qga.Error{Code: -1, Desc: err.Error()}
 		return res

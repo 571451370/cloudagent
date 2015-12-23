@@ -50,6 +50,7 @@ func master() error {
 		for {
 			cmd := exec.Command(os.Args[0])
 			cmd.Dir = "/"
+			cmd.Env = append(cmd.Env, os.Environ()...)
 			cmd.Env = append(cmd.Env, "master=false")
 			cmd.Stdin = nil
 			cmd.Stdout = stdOut

@@ -119,7 +119,9 @@ func fnGuestExec1(req *qga.Request) *qga.Response {
 		return res
 	}
 
-	output, err := exec.Command("sh", "-c", string(cmdline)).CombinedOutput()
+	cmd := exec.Command("sh", "-c", string(cmdline))
+	cmd.Env = append(cmd.Env, os.Environ()...)
+	output, err := cmd.CombinedOutput()
 	if err != nil {
 		res.Error = &qga.Error{Code: -1, Desc: err.Error()}
 		return res

@@ -61,7 +61,9 @@ func fnGuestFstrim(req *qga.Request) *qga.Response {
 	for _, fs := range fslist {
 		switch fs.Type {
 		case "ufs", "ffs":
-			err = exec.Command("fsck_"+fs.Type, "-B", "-E", fs.Path).Run()
+			cmd : = exec.Command("fsck_"+fs.Type, "-B", "-E", fs.Path)
+                        cmd.Env = append(cmd.Env, os.Environ()...)
+                        err = cmd.Run()
 		default:
 			err = fmt.Errorf("unsupported")
 		}
