@@ -11,7 +11,10 @@ var (
 func StoreSet(ns string, k interface{}, v interface{}) {
 	storeMutext.Lock()
 	defer storeMutext.Unlock()
-	m := make(map[interface{}]interface{})
+	m, ok := store[ns]
+	if !ok {
+		m = make(map[interface{}]interface{})
+	}
 	m[k] = v
 	store[ns] = m
 }
