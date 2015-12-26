@@ -16,6 +16,8 @@ type Command struct {
 
 var (
 	commands = make(map[string]*Command)
+	// ErrMessageFormat message
+	ErrMessageFormat = &Response{Error: &Error{Code: -1, Desc: "Invalid Message Format"}}
 )
 
 // RegisterCommand registers command to process inside worker
@@ -57,10 +59,6 @@ func CmdRun(req *Request) *Response {
 
 	return &Response{Error: &Error{Class: "CommandNotFound", Desc: fmt.Sprintf("command %s not found", req.Execute)}}
 }
-
-var (
-	ErrMessageFormat = &Response{Error: &Error{Code: -1, Desc: "Invalid Message Format"}}
-)
 
 // Request struct used to parse incoming request
 type Request struct {

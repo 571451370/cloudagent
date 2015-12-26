@@ -7,9 +7,12 @@ import (
 	"github.com/vtolstov/cloudagent/qga"
 )
 
+/*
 var (
+	// ErrMessageFormat message
 	ErrMessageFormat = &Response{Error: &Error{Code: -1, Desc: "Invalid Message Format"}}
 )
+*/
 
 // Channel interface provide communication channel with cloudagent
 type Channel interface {
@@ -21,28 +24,7 @@ type Channel interface {
 	Poll() error
 }
 
-// Request struct used to parse incoming request
-type Request struct {
-	Execute string          `json:"execute"`
-	RawArgs json.RawMessage `json:"arguments,omitempty"`
-	ID      string          `json:"id,omitempty"`
-}
-
-// Error struct used to indicate error when processing command
-type Error struct {
-	Class  string `json:"class,omitempty"`
-	Desc   string `json:"desc,omitempty"`
-	Bufb64 string `json:"bufb64,omitempty"`
-	Code   int    `json:"code,omitempty"`
-}
-
-// Response struct used to encode response from command
-type Response struct {
-	Return interface{} `json:"return,omitempty"`
-	Error  *Error      `json:"error,omitempty"`
-	ID     string      `json:"id,omitempty"`
-}
-
+// Serve run i/o on channel
 func Serve(ch Channel) error {
 	var err error
 	var n int

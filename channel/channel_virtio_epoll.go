@@ -8,7 +8,7 @@ import (
 	"golang.org/x/sys/unix"
 )
 
-// Serve channel messages
+// Poll channel for new messages
 func (ch *VirtioChannel) Poll( /*block bool*/ ) error {
 	var err error
 
@@ -30,7 +30,7 @@ func (ch *VirtioChannel) Poll( /*block bool*/ ) error {
 	events := make([]unix.EpollEvent, 32)
 
 	for {
-		nevents, err := unix.EpollWait(ch.pfd, events, 1000*60*2)
+		nevents, err := unix.EpollWait(ch.pfd, events, 1000*60*5)
 		switch err {
 		case nil:
 			if nevents == 0 {
