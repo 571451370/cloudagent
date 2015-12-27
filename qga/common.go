@@ -1,6 +1,19 @@
 package qga
 
-var l *Logger
+import "time"
+
+var (
+	l      *Logger
+	uptime time.Time
+)
+
+func init() {
+	uptime = time.Now()
+}
+
+func GetUptime() time.Time {
+	return uptime
+}
 
 // FileSystem struct
 type FileSystem struct {
