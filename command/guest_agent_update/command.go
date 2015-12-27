@@ -122,7 +122,7 @@ func fnGuestAgentUpdate(req *qga.Request) *qga.Response {
 	}
 	time.Sleep(2 * time.Second)
 	defer func() {
-		cmd := exec.Command(os.Args[0])
+		cmd := exec.Command(os.Args[0], "-d")
 		cmd.SysProcAttr = &syscall.SysProcAttr{Setsid: true, Noctty: false, Setpgid: false, Foreground: false}
 
 		err = cmd.Start()
