@@ -24,8 +24,9 @@ func fnGuestInfo(req *qga.Request) *qga.Response {
 
 	res.Return = struct {
 		Version  string         `json:"version"`
+		Uptime   int64          `json:"uptime"`
 		Commands []*qga.Command `json:"supported_commands"`
-	}{Version: qga.GetVersion(), Commands: qga.ListCommands()}
+	}{Version: qga.GetVersion(), Commands: qga.ListCommands(), Uptime: int64(qga.GetUptime().Unix())}
 
 	return res
 }

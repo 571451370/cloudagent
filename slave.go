@@ -11,22 +11,26 @@ func slave() error {
 	var err error
 
 	switch options.Method {
+	/*
+		case "fd-serial":
+			if ch, err = channel.NewFdChannel(options.Path); err != nil {
+				return err
+			}
+	*/
 	case "virtio-serial":
 		if ch, err = channel.NewVirtioChannel(options.Path); err != nil {
 			return err
 		}
-		err = ch.Open()
 		/*
 			case "isa-serial":
-				if ch, err = qga.NewIsaChannel(options.Path); err != nil {
+				if ch, err = channel.NewIsaChannel(options.Path); err != nil {
 					return err
 				}
-				err = ch.Open()
 		*/
 	default:
 		return fmt.Errorf("unsupported method %s", options.Method)
 	}
-	if err != nil {
+	if err = ch.Open(); err != nil {
 		return err
 	}
 	defer ch.Close()
