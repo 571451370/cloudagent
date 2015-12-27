@@ -41,8 +41,6 @@ func main() {
 		os.Exit(0)
 	}
 
-	//	l = qga.NewLogger(nil)
-
 	if err = master(); err != nil {
 		fmt.Printf(err.Error())
 		os.Exit(1)
