@@ -29,6 +29,7 @@ import (
 	"os/exec"
 	"strings"
 	"syscall"
+	"unicode"
 
 	"github.com/vtolstov/cloudagent/qga"
 )
@@ -58,6 +59,26 @@ type data2 struct {
 	Env    string `json:"env,omitempty"`
 	Input  string `json:"input-data,omitempty"`
 	Output bool   `json:"capture-output"`
+}
+
+func splitArgv(s string) []string {
+	lastQuote := rune(0)
+	f := func(c rune) bool {
+		switch {
+		case c == lastQuote:
+			lastQuote = rune(0)
+			return false
+		case lastQuote != rune(0):
+			return false
+		case unicode.In(c, unicode.Quotation_Mark):
+			lastQuote = c
+			return false
+		default:
+			return unicode.IsSpace(c)
+
+		}
+	}
+	return strings.FieldsFunc(s, f)
 }
 
 func fnGuestExec(req *qga.Request) *qga.Response {
@@ -168,7 +189,7 @@ func fnGuestExec2(req *qga.Request) *qga.Response {
 
 	cmd := &exec.Cmd{
 		Path: path,
-		Args: append([]string{path}, strings.Split(reqData.Arg, " ")...),
+		Args: append([]string{path}, splitArgv(reqData.Arg)...),
 		Env:  env,
 		Dir:  "/",
 		SysProcAttr: &syscall.SysProcAttr{
