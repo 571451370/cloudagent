@@ -48,19 +48,23 @@ func init() {
 	})
 }
 
+type data1 struct {
+	Command string `json:"command"`
+}
+
+type data2 struct {
+	Path   string `json:"path"`
+	Arg    string `json:"arg,omitempty"`
+	Env    string `json:"env,omitempty"`
+	Input  string `json:"input-data,omitempty"`
+	Output bool   `json:"capture-output"`
+}
+
 func fnGuestExec(req *qga.Request) *qga.Response {
 	res := &qga.Response{ID: req.ID}
 
-	reqData1 := struct {
-		Command string `json:"command"`
-	}{}
-	reqData2 := struct {
-		Path   string `json:"path"`
-		Arg    string `json:"arg,omitempty"`
-		Env    string `json:"env,omitempty"`
-		Input  string `json:"input-data,omitempty"`
-		Output bool   `json:"capture-output"`
-	}{}
+	reqData1 := data1{}
+	reqData2 := data2{}
 
 	var errStr []string
 
@@ -99,9 +103,7 @@ func fnGuestExec1(req *qga.Request) *qga.Response {
 		Output   string
 	}{}
 
-	reqData := struct {
-		Command string `json:"command"`
-	}{}
+	reqData := data1{}
 
 	err := json.Unmarshal(req.RawArgs, &reqData)
 	if err != nil {
@@ -144,13 +146,7 @@ func fnGuestExec2(req *qga.Request) *qga.Response {
 		Pid int `json:"pid"`
 	}{}
 
-	reqData := struct {
-		Path   string `json:"path"`
-		Args   string `json:"arg,omitempty"`
-		Env    string `json:"env,omitempty"`
-		Input  string `json:"input-data,omitempty"`
-		Output bool   `json:"capture-output"`
-	}{}
+	reqData := data2{}
 
 	err := json.Unmarshal(req.RawArgs, &reqData)
 	if err != nil {
@@ -172,7 +168,7 @@ func fnGuestExec2(req *qga.Request) *qga.Response {
 
 	cmd := &exec.Cmd{
 		Path: path,
-		Args: append([]string{path}, strings.Split(reqData.Args, " ")...),
+		Args: append([]string{path}, strings.Split(reqData.Arg, " ")...),
 		Env:  env,
 		Dir:  "/",
 		SysProcAttr: &syscall.SysProcAttr{
