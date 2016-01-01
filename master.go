@@ -18,6 +18,7 @@ func master() error {
 	if os.Getenv("master") == "false" {
 		master = false
 	}
+	os.Unsetenv("master")
 
 	if err = os.Chdir("/"); err != nil {
 		return err

@@ -34,6 +34,7 @@ func main() {
 	}
 
 	if options.Fork {
+		os.Unsetenv("master")
 		if err = fork(); err != nil {
 			fmt.Printf(err.Error())
 			os.Exit(1)
