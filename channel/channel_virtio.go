@@ -11,7 +11,7 @@ import (
 
 const (
 	vioChannelMode  = os.FileMode(os.ModeExclusive | os.ModeCharDevice | 0600)
-	vioChannelFlags = os.O_RDWR | unix.O_NONBLOCK | unix.O_ASYNC | unix.O_CLOEXEC
+	vioChannelFlags = os.O_RDWR | unix.O_NONBLOCK | unix.O_ASYNC
 )
 
 // VirtioChannel struct
