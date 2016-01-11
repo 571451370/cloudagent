@@ -18,7 +18,7 @@ func (ch *VirtioChannel) Poll( /*block bool*/ ) error {
 		return err
 	}
 
-	ch.pfd, err = unix.EpollCreate1(0)
+	ch.pfd, err = unix.EpollCreate(1)
 	if err != nil {
 		return err
 	}
