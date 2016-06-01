@@ -30,6 +30,68 @@ func init() {
 	})
 }
 
+func setPwdChpasswd(user string, passwd []byte, crypted bool) error {
+	args := []string{}
+	args = append(args, "-e")
+
+	cmd := exec.Command("chpasswd", args...)
+	cmd.Env = append(cmd.Env, os.Environ()...)
+
+	stdin, err := cmd.StdinPipe()
+	if err != nil {
+		return err
+	}
+
+	err = cmd.Start()
+	if err != nil {
+		return err
+	}
+
+	arg := fmt.Sprintf("%s:%s", user, passwd)
+	_, err = stdin.Write([]byte(arg))
+	if err != nil {
+		return err
+	}
+	stdin.Close()
+
+	err = cmd.Wait()
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func setPwdPasswd(user string, passwd []byte, crypted bool) error {
+	args := []string{}
+
+	args = append(args, "--stdin", user)
+	cmd := exec.Command("passwd", args...)
+	cmd.Env = append(cmd.Env, os.Environ()...)
+
+	stdin, err := cmd.StdinPipe()
+	if err != nil {
+		return err
+	}
+
+	err = cmd.Start()
+	if err != nil {
+		return err
+	}
+
+	arg := fmt.Sprintf("%s", passwd)
+	_, err = stdin.Write([]byte(arg))
+	if err != nil {
+		return err
+	}
+	stdin.Close()
+
+	err = cmd.Wait()
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
 func fnGuestSetUserPassword(req *qga.Request) *qga.Response {
 	res := &qga.Response{ID: req.ID}
 
@@ -51,70 +113,18 @@ func fnGuestSetUserPassword(req *qga.Request) *qga.Response {
 		return res
 	}
 
-	args := []string{}
-
 	if reqData.Crypted {
-		args = append(args, "-e")
-
-		cmd := exec.Command("chpasswd", args...)
-		cmd.Env = append(cmd.Env, os.Environ()...)
-
-		stdin, err := cmd.StdinPipe()
+		err = setPwdChpasswd(reqData.User, passwd, reqData.Crypted)
 		if err != nil {
 			res.Error = &qga.Error{Code: -1, Desc: err.Error()}
-			return res
-		}
-
-		err = cmd.Start()
-		if err != nil {
-			res.Error = &qga.Error{Code: -1, Desc: err.Error()}
-			return res
-		}
-
-		arg := fmt.Sprintf("%s:%s", reqData.User, passwd)
-		_, err = stdin.Write([]byte(arg))
-		if err != nil {
-			res.Error = &qga.Error{Code: -1, Desc: err.Error()}
-			return res
-		}
-		stdin.Close()
-
-		err = cmd.Wait()
-		if err != nil {
-			res.Error = &qga.Error{Code: -1, Desc: err.Error()}
-			return res
 		}
 	} else {
-		args = append(args, "--stdin", reqData.User)
-		cmd := exec.Command("passwd", args...)
-		cmd.Env = append(cmd.Env, os.Environ()...)
-
-		stdin, err := cmd.StdinPipe()
-		if err != nil {
-			res.Error = &qga.Error{Code: -1, Desc: err.Error()}
-			return res
+		if err = setPwdChpasswd(reqData.User, passwd, reqData.Crypted); err != nil {
+			err = setPwdPasswd(reqData.User, passwd, reqData.Crypted)
+			if err != nil {
+				res.Error = &qga.Error{Code: -1, Desc: err.Error()}
+			}
 		}
-
-		err = cmd.Start()
-		if err != nil {
-			res.Error = &qga.Error{Code: -1, Desc: err.Error()}
-			return res
-		}
-
-		arg := fmt.Sprintf("%s", passwd)
-		_, err = stdin.Write([]byte(arg))
-		if err != nil {
-			res.Error = &qga.Error{Code: -1, Desc: err.Error()}
-			return res
-		}
-		stdin.Close()
-
-		err = cmd.Wait()
-		if err != nil {
-			res.Error = &qga.Error{Code: -1, Desc: err.Error()}
-			return res
-		}
-
 	}
 	return res
 }
