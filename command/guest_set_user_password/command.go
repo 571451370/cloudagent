@@ -55,36 +55,66 @@ func fnGuestSetUserPassword(req *qga.Request) *qga.Response {
 
 	if reqData.Crypted {
 		args = append(args, "-e")
+
+		cmd := exec.Command("chpasswd", args...)
+		cmd.Env = append(cmd.Env, os.Environ()...)
+
+		stdin, err := cmd.StdinPipe()
+		if err != nil {
+			res.Error = &qga.Error{Code: -1, Desc: err.Error()}
+			return res
+		}
+
+		err = cmd.Start()
+		if err != nil {
+			res.Error = &qga.Error{Code: -1, Desc: err.Error()}
+			return res
+		}
+
+		arg := fmt.Sprintf("%s:%s", reqData.User, passwd)
+		_, err = stdin.Write([]byte(arg))
+		if err != nil {
+			res.Error = &qga.Error{Code: -1, Desc: err.Error()}
+			return res
+		}
+		stdin.Close()
+
+		err = cmd.Wait()
+		if err != nil {
+			res.Error = &qga.Error{Code: -1, Desc: err.Error()}
+			return res
+		}
+	} else {
+		args = append(args, "--stdin", reqData.User)
+		cmd := exec.Command("passwd", args...)
+		cmd.Env = append(cmd.Env, os.Environ()...)
+
+		stdin, err := cmd.StdinPipe()
+		if err != nil {
+			res.Error = &qga.Error{Code: -1, Desc: err.Error()}
+			return res
+		}
+
+		err = cmd.Start()
+		if err != nil {
+			res.Error = &qga.Error{Code: -1, Desc: err.Error()}
+			return res
+		}
+
+		arg := fmt.Sprintf("%s", passwd)
+		_, err = stdin.Write([]byte(arg))
+		if err != nil {
+			res.Error = &qga.Error{Code: -1, Desc: err.Error()}
+			return res
+		}
+		stdin.Close()
+
+		err = cmd.Wait()
+		if err != nil {
+			res.Error = &qga.Error{Code: -1, Desc: err.Error()}
+			return res
+		}
+
 	}
-
-	cmd := exec.Command("chpasswd", args...)
-	cmd.Env = append(cmd.Env, os.Environ()...)
-
-	stdin, err := cmd.StdinPipe()
-	if err != nil {
-		res.Error = &qga.Error{Code: -1, Desc: err.Error()}
-		return res
-	}
-
-	err = cmd.Start()
-	if err != nil {
-		res.Error = &qga.Error{Code: -1, Desc: err.Error()}
-		return res
-	}
-
-	arg := fmt.Sprintf("%s:%s", reqData.User, passwd)
-	_, err = stdin.Write([]byte(arg))
-	if err != nil {
-		res.Error = &qga.Error{Code: -1, Desc: err.Error()}
-		return res
-	}
-	stdin.Close()
-
-	err = cmd.Wait()
-	if err != nil {
-		res.Error = &qga.Error{Code: -1, Desc: err.Error()}
-		return res
-	}
-
 	return res
 }
