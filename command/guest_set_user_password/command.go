@@ -32,8 +32,10 @@ func init() {
 
 func setPwdChpasswd(user string, passwd []byte, crypted bool) error {
 	args := []string{}
-	args = append(args, "-e")
 
+	if crypted {
+		args = append(args, "-e")
+	}
 	cmd := exec.Command("chpasswd", args...)
 	cmd.Env = append(cmd.Env, os.Environ()...)
 
